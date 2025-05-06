@@ -47,10 +47,8 @@ def render_credits():
     total = 0
     valid_credits: list[dict] = []
 
-    print(f"inside render_credits {start_date=} {end_date=}")
     for credit in credits:
         credit_date = datetime.strptime(credit['Date'], "%m/%d/%Y").date()
-        print(credit_date)
 
         if credit_date >= start_date and credit_date <= end_date:
             valid_credits.append(credit)
