@@ -35,6 +35,9 @@ def process_csv(uploaded_file: UploadedFile):
         if 'Amount' not in curr_row_dict:
             raise Exception("no amount present, investigate !!")
 
+        if curr_row_dict['Amount'] == 'Amount':
+            continue
+        
         if float(curr_row_dict['Amount']) < 0:
             credits.append(curr_row_dict)
         elif float(curr_row_dict['Amount']) > 0:
