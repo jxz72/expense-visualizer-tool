@@ -37,7 +37,7 @@ def process_csv(uploaded_file: UploadedFile):
 
         if curr_row_dict['Amount'] == 'Amount':
             continue
-        
+
         if float(curr_row_dict['Amount']) < 0:
             credits.append(curr_row_dict)
         elif float(curr_row_dict['Amount']) > 0:
@@ -77,7 +77,7 @@ def render_credits():
 def main():
     st.set_page_config(page_title="Jeff's Finance Tracker", page_icon="💰")
     st.title("Card Spend Tracker")
-    st.markdown("Import CSV in the format ```Date | Transaction Amount | ANY | ANY | Transaction Name```")
+    st.markdown("Import CSV in the format ```Date | Amount | ANY | ANY | Transaction Name```")
     st.text("The above is the default export format for Wells Fargo cards (including Bilt card).")
     # input
     date_range = st.date_input(
