@@ -70,13 +70,11 @@ def render_credits():
 
     st.dataframe(data={"total": total})
 
-   
-
 
 def main():
     st.set_page_config(page_title="Jeff's Finance Tracker", page_icon="💰")
     st.title("Card Spend Tracker")
-    st.text("Import CSV in the format Date | Transaction Amount | ANY | ANY | Transaction Name")
+    st.markdown("Import CSV in the format ```Date | Transaction Amount | ANY | ANY | Transaction Name```")
     st.text("The above is the default export format for Wells Fargo cards (including Bilt card).")
     # input
     date_range = st.date_input(
