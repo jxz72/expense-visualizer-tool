@@ -3,7 +3,6 @@ import csv
 from io import StringIO
 import streamlit as st
 import plotly.express as px
-from PIL import Image
 
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
@@ -46,7 +45,7 @@ def process_csv(uploaded_file: UploadedFile):
 
 def render_credits():
     total = 0
-    valid_credits = []
+    valid_credits: list[dict] = []
 
     print(f"inside render_credits {start_date=} {end_date=}")
     for credit in credits:
@@ -60,11 +59,9 @@ def render_credits():
 
     st.header("Total Spend Graph")
 
-
-    labels = [tx.get("Transaction Name") for tx in valid_credits]
+    labels = [f"{tx.get("Transaction Name")} {tx['Date']}" for tx in valid_credits]
     values = [abs(float(tx["Amount"])) for tx in valid_credits]
 
-    # Create and display pie chart
     fig = px.pie(
         names=labels,
         values=values,
