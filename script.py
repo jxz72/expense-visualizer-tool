@@ -13,18 +13,18 @@ credits: list[dict] = []
 debits: list[dict] = []
 zeros: list[dict] = []
 
-files_uploaded: list[str] = []
+uploaded_file_names_and_total_credits_map: dict[str, int] = {}
 
 start_date: date = date(1900, 1, 1)
 end_date: date = date.today()
 
 def process_csv(uploaded_file: UploadedFile):
-    csv_name = uploaded_file.name
-    files_uploaded.append(csv_name)
+    csv_name: str = uploaded_file.name
 
     stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
     parsed_csv = csv.reader(stringio)
-
+    
+    local_credit_total = 0
     for row in parsed_csv:
         curr_row_dict = {}
         for index in headers.keys():
@@ -39,12 +39,15 @@ def process_csv(uploaded_file: UploadedFile):
             continue
 
         if float(curr_row_dict['Amount']) < 0:
+            local_credit_total += float(curr_row_dict['Amount'])
             credits.append(curr_row_dict)
         elif float(curr_row_dict['Amount']) > 0:
             debits.append(curr_row_dict)
         else:
             zeros.append(curr_row_dict)
-    
+
+    if csv_name not in uploaded_file_names_and_total_credits_map:
+        uploaded_file_names_and_total_credits_map[csv_name] = abs(local_credit_total)
 
 def render_credits():
     total = 0
@@ -71,7 +74,13 @@ def render_credits():
 
     st.plotly_chart(fig)
 
-    st.dataframe(data={"total": total})
+    # Summary Graph
+
+    st.subheader("Summary")
+    summary_data = {"Total Spend": total}
+    for uploaded_file_name in uploaded_file_names_and_total_credits_map:
+        summary_data[uploaded_file_name] = uploaded_file_names_and_total_credits_map[uploaded_file_name]
+    st.dataframe(data=summary_data)
 
 
 def main():
@@ -98,7 +107,7 @@ def main():
         for uploaded_file in uploaded_files:
             process_csv(uploaded_file=uploaded_file)
 
-    if len(files_uploaded) == 0:
+    if len(uploaded_files) == 0:
         st.write("Upload a CSV to start")
         return
     
